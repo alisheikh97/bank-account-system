@@ -40,3 +40,47 @@ void BankAccount::displayInfo(){
 	std::cout << "Balance $: " <<    balance     << "\n";
 	std::cout << "------------------------------------\n";
 }
+
+
+void BankAccount::saveToFile(std::string fileName) {
+	//ofstream = output file stream
+	//This Creates a file if it does not exist
+	//Or Overwrites the exisiting one
+	std::ofstream file(fileName);
+
+	//if file does not open then we give this error
+	if (!file.is_open()) {
+		std::cout << "Error: Could not saved account data. \n";
+		return;
+	}
+
+	file << ownerName << "\n";
+	file << accountType << "\n";
+	file << balance << "\n";
+	
+	//always close when done to release the file
+	file.close();
+	std::cout << "Account saved sucessfully \n";
+
+}
+
+bool BankAccount::loadFromFile(std::string fileName) {
+	//ifsteam = input file stream
+	std::ifstream file(fileName);
+
+	if (!file.is_open()) {
+		return false;
+	}
+
+	//getline reads a full line including spaces
+	std::getline(file, ownerName);
+	std::getline(file, accountType);
+	// Each >> reads value from the file 
+	// but stops at when there would be a space
+	file >> balance;
+
+
+	file.close();
+	return true;
+
+}
