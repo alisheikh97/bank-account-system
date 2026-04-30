@@ -13,7 +13,7 @@ private:
 	//this string holds the type of account "Savings" or "Cheq"
 	std::string accountType;
 
-public: 
+public:
 	//this is a constructor - runs when object is created
 	BankAccount(std::string name, double startingBalance, std::string type);
 	//Methods
