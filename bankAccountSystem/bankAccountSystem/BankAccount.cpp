@@ -3,6 +3,14 @@
 
 //this is where i house all my functions or "logic"
 
+//default constructor
+BankAccount::BankAccount() {
+	ownerName = "temp";
+	balance = 0.0;
+	accountType = "temp";
+}
+
+
 BankAccount::BankAccount(std::string name, double startingBalance, std::string type) {
 	ownerName = name;
 	balance = startingBalance;
@@ -42,45 +50,17 @@ void BankAccount::displayInfo(){
 }
 
 
-void BankAccount::saveToFile(std::string fileName) {
-	//ofstream = output file stream
-	//This Creates a file if it does not exist
-	//Or Overwrites the exisiting one
-	std::ofstream file(fileName);
-
-	//if file does not open then we give this error
-	if (!file.is_open()) {
-		std::cout << "Error: Could not saved account data. \n";
-		return;
-	}
-
+void BankAccount::saveToFile(std::ofstream& file) {
 	file << ownerName << "\n";
 	file << accountType << "\n";
 	file << balance << "\n";
-	
-	//always close when done to release the file
-	file.close();
-	std::cout << "Account saved sucessfully \n";
-
 }
 
-bool BankAccount::loadFromFile(std::string fileName) {
-	//ifsteam = input file stream
-	std::ifstream file(fileName);
-
-	if (!file.is_open()) {
-		return false;
-	}
-
-	//getline reads a full line including spaces
-	std::getline(file, ownerName);
-	std::getline(file, accountType);
-	// Each >> reads value from the file 
-	// but stops at when there would be a space
+bool BankAccount::loadFromFile(std::ifstream& file) {
+	if (!std::getline(file, ownerName)) return false;
+	if (!std::getline(file, accountType)) return false;
 	file >> balance;
-
-
-	file.close();
+	file.ignore();
 	return true;
 
 }

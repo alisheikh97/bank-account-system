@@ -15,6 +15,9 @@ private:
 	std::string accountType;
 
 public:
+	//default constructor, logic will be written in logic file
+	BankAccount();
+
 	//this is a constructor - runs when object is created
 	BankAccount(std::string name, double startingBalance, std::string type);
 	//Methods
@@ -24,8 +27,8 @@ public:
 	bool withdraw(double amount);
 	void displayInfo();
 
-	void saveToFile(std::string fileName);
-	bool loadFromFile(std::string fileName);
+	void saveToFile(std::ofstream& file);
+	bool loadFromFile(std::ifstream& file);
 
 
 	//These are getters. These will be used to read private data safely
