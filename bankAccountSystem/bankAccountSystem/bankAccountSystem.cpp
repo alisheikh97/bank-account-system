@@ -21,7 +21,10 @@ void showMainMenu() {
     std::cout << "3. Deposit\n";
     std::cout << "4. Withdraw\n";
     std::cout << "5. View Account Info\n";
-    std::cout << "6. Save & Exit\n";
+    std::cout << "6. View Transaction History\n";
+    std::cout << "7. Search By Name\n";
+    std::cout << "8. Delete Account\n";
+    std::cout << "9. Save & Exit\n";
     std::cout << "============================\n";
     std::cout << "Enter choice: ";
 }
@@ -36,6 +39,70 @@ int getValidChoice() {
     return choice;
 
 }   
+
+void deleteAccount(std::vector<BankAccount> accounts) {
+    if (accounts.empty()) {
+        std::cout << "No Accounts to delete!\n";
+        return;
+    }
+   
+    listAllAccounts(accounts);
+    std::cout << "Which account would you like to delete? \n";
+    int choice = getValidChoice();
+
+    if (choice < 1 || choice >(int)accounts.size()) {
+        std::cout << "Invalid selection. \n";
+        return;
+    }
+    int idx = choice - 1;
+
+    std::cout << "Are you sure you would like to delete " << accounts[idx].getName() << "'s account? (y/n)\n";
+    std::string confirm;
+    std::cin >> confirm;
+
+    if (confirm != "y" && confirm !=  "Y") {
+        std::cout << "Account not delete\n";
+        return;
+    }
+
+    accounts.erase(accounts.begin() + idx);
+    std::cout << accounts[idx].getName() << "'s account has been deleted.\n";
+}
+
+void searchByName(std::vector<BankAccount> accounts) {
+    
+    if (accounts.empty()) {
+        std::cout << "There are no Accounts!\n";
+        return;
+    }
+
+    std::cout << "Please enter the name of user you would like to find";
+    std::string name; 
+    std::getline(std::cin, name);
+    //with & i get the address of original character location of name
+    //i replace that character with a lower case character in that place
+    for (char& c : name) c = std::tolower(c);
+    bool found = false;
+
+    for (int i = 0; i < (int)accounts.size();i++) {
+        std::string accountName = accounts[i].getName();
+        for (char& c : accountName) c = std::tolower(c);
+
+        if (accountName.find(name) != std::string::npos) {
+            if (!found) {
+                std::cout << "\n=== Search Results ===\n";
+                found = true;
+            }
+            std::cout << i + 1 << ". ";
+            accounts[i].displayInfo();
+        }
+    }
+
+    if (!found) {
+        std::cout << "No accounts found matching '" << name << "'.\n";
+    }
+
+}
 
 void saveAllAccounts(std::vector<BankAccount>& accounts) {
     std::ofstream file(SAVE_FILE);
@@ -159,18 +226,18 @@ int main()
         int choice = getValidChoice();
 
         switch (choice) {
-        case 1: 
+        case 1:
             listAllAccounts(accounts);
             break;
-        case 2: 
+        case 2:
             createAccount(accounts);
             break;
         case 3: {
             int idx = selectAccount(accounts);
             if (idx == -1) break;
-            double amount; 
+            double amount;
             std::cout << "Deposit amount : $";
-            std::cin >> amount; 
+            std::cin >> amount;
             accounts[idx].deposit(amount);
             break;
         }
@@ -189,12 +256,27 @@ int main()
             accounts[idx].displayInfo();
             break;
         }
-        case 6: 
+        case 6:{
+            int idx = selectAccount(accounts);
+            if (idx == -1) break;
+            accounts[idx].displayHistory();
+            break;
+        }
+        case 7: {
+            searchByName(accounts);
+            break;
+        }
+            
+        case 8: {
+            deleteAccount(accounts);
+            break;
+
+        }
+        case 9:
             saveAllAccounts(accounts);
             std::cout << "Goodbye!\n";
             running = false;
             break;
-
         default: 
             std::cout << "Please enter a valid number 1 - 6 \n";
             break;

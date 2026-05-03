@@ -2,6 +2,8 @@
 
 #include <string>
 #include <fstream> //Needed to save on a text file
+#include <vector>
+#include "Transaction.h"
 
 class BankAccount {
 
@@ -13,6 +15,8 @@ private:
 	double balance;
 	//this string holds the type of account "Savings" or "Cheq"
 	std::string accountType;
+
+	std::vector<Transaction>history;
 
 public:
 	//default constructor, logic will be written in logic file
@@ -26,9 +30,11 @@ public:
 	//returns bool if sucess or false if not enough fund
 	bool withdraw(double amount);
 	void displayInfo();
+	void displayHistory();
 
 	void saveToFile(std::ofstream& file);
 	bool loadFromFile(std::ifstream& file);
+
 
 
 	//These are getters. These will be used to read private data safely
